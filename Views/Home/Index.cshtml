@@ -1,0 +1,94 @@
+﻿@Model 
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h4>Ramdom Counter</h4>   
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col-sm-4"><input id="filesize" class="form-control col-sm-9" placeholder="Size of output file(kb)" /></div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-2"><button class="btn btn-info" style="border-radius: 12px;" id="start">Start</button></div>
+                <div class="col-sm-2"><button class="btn btn-danger text-white" style="border-radius: 12px;" id="stop">Stop</button></div>               
+            </div>
+            <br />
+            <div class="row">
+                <label class="col-sm-2"><b style="color:blue">(@ViewData["Numeric"] %)</b> Numeric ->  </label><text id="numeric"></text>
+                </div>
+            <div class="row">
+                <label class="col-sm-2"><b style="color:blue">(@ViewData["AlphaNum"] %)</b> AlphaNum ->  </label> <text id="alphaNumeric"></text>
+                </div>
+            <div class="row">
+                <label class="col-sm-2"><b style="color:blue">(@ViewData["Float"] %)</b> Float ->  </label><text id="floatNum"></text>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-sm-4">
+        <a class="btn btn-success col-sm-9" style="border-radius: 12px;" id="start" asp-action="Report" asp-controller="Home">Generate Report</a>
+    </div>
+
+</div>
+@section scripts{ 
+<script>
+    $(document).ready(function () {
+        var intervalId;
+        var size = 0;
+        //Button Start
+        $('#start').on("click", function () {          
+            //CAlling repeatly 
+          intervalId =  window.setInterval(function () {                         
+              //Get count call
+              $.ajax({
+                  url: 'Home/GetCount',
+                  method: 'get',
+                  success: function (responce) {
+                      //  alert("hello " + responce.numeric + responce.alphaNumeric + responce.float);
+                      $('#numeric').html(responce.numeric);
+                      $('#alphaNumeric').html(responce.alphaNumeric);
+                      $('#floatNum').html(responce.floatNum);
+                      console.log("getCount >> " + responce.numeric + responce.alphaNumeric + responce.floatNum);
+                     
+                  },
+                  error: function (responce) { console.log("Error GetCount : >> "+ responce); }
+              });
+
+              //Get file size 
+              $.ajax({
+                  url: 'Home/GetfileSize',
+                  method: 'get',
+                  success: function (responce) {
+                      console.log("hello " + responce);
+                      size = parseFloat(responce);
+                  },
+                  error: function (responce) { alert(responce); }
+              });
+              //Coampare file size limit
+              if (size > $('#filesize').val()) {
+                  alert("File Size is over the Limit!");
+                  window.clearInterval(intervalId);
+                  return false;
+              }
+              console.log("filesize " + $('#filesize').val());
+
+            }, 1000);//End of Interval
+         
+        });//End of start button
+
+        //button stop
+        $('#stop').on("click", function () {
+            window.clearInterval(intervalId);
+        });
+        
+    });
+
+</script>
+
+
+}

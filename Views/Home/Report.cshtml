@@ -1,0 +1,38 @@
+﻿@model IEnumerable<PTC1002.Models.DataTypes>
+@{ 
+
+    ViewData["Title"] = "Report";
+}
+<h6>Generate Report</h6>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Numeric) % @ViewData["Numeric"]
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AlphaNumeric) % @ViewData["AlphaNum"]
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Float) % @ViewData["Float"]
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Numeric)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AlphaNumeric)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Float)
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>
